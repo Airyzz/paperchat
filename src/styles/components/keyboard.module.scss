@@ -1,0 +1,309 @@
+@import "../main.scss";
+
+.keyboard_bg {
+  @include pixelated-rectangle;
+  @include flexcenter;
+  background-color: $dark-gray;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+
+  .keyboard_content {
+    @include pixelated-rectangle;
+    background-color: $clear-bg;
+    width: 98.6%;
+    height: 97%;
+
+    @include small-phones {
+      height: 96.6%;
+      width: 99%;
+    }
+  }
+
+  img {
+    -webkit-user-drag: none;
+  }
+
+  .special_key {
+    background-color: $special-key-bg !important;
+    border: 1.5px solid $clear-bg;
+    position: relative;
+    @include flexcenter;
+    z-index: 10;
+
+    @include phones {
+      border: 0.8px solid $clear-bg;
+    }
+
+    img {
+      z-index: 10;
+    }
+
+    &::after {
+      content: '';
+      background-color: $special-key-bg !important;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      z-index: 8;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:active,
+    &.selected {
+      img {
+        z-index: 4;
+      }
+
+      &::after {
+        z-index: 3;
+      }
+    }
+  }
+}
+
+.alphanumeric {
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  padding: 1.2px;
+
+  .key_row {
+    display: flex;
+    height: 20%;
+
+    &:first-child {
+      margin: 0px 7px;
+    }
+
+    &:nth-child(2) {
+      margin: 0px 0px 0px 22px;
+
+      .DEL {
+        width: 56px;
+
+        @include phones {
+          width: 45px;
+        }
+
+        @include small-phones {
+          width: 40px;
+        }
+
+        img {
+          width: 50%;
+          height: 50%;
+          object-fit: contain;
+        }
+      }
+    }
+
+    &:nth-child(3) {
+      .CAPS {
+        width: 45px;
+
+        @include phones {
+          width: 40px;
+        }
+
+        img {
+          width: 75%;
+          height: 60%;
+          object-fit: contain;
+
+          @include small-phones {
+            height: 50%;
+          }
+        }
+      }
+
+      .ENTER {
+        width: 72px;
+
+        @include phones {
+          width: 62px;
+        }
+
+        @include small-phones {
+          width: 58px;
+        }
+
+        img {
+          width: 90%;
+          height: 70%;
+          object-fit: contain;
+        }
+      }
+    }
+
+    &:nth-child(4) {
+      margin: 0px 20px 0px 0px;
+
+      .SHIFT {
+        width: 60px;
+
+        @include phones {
+          width: 50px;
+        }
+
+        img {
+          width: 60%;
+          height: 45%;
+          object-fit: contain;
+
+          @include small-phones {
+            height: 50%;
+          }
+        }
+      }
+    }
+
+    &:nth-child(5) {
+      margin: 0px 0px 0px 18%;
+
+      @include landscape-tablet-up {
+        margin: 0px 0px 0px 16%;
+      }
+
+      .SPACE {
+        width: 53%;
+        position: relative;
+
+        img {
+          width: 25%;
+          height: 40%;
+          object-fit: contain;
+          position: absolute;
+          top: 40%;
+
+          @include phones {
+            height: 48%;
+            top: 34%;
+          }
+        }
+      }
+    }
+
+    div.key_container {
+      height: 100%;
+      width: 9%;
+    }
+
+    &.dragging div:hover {
+      cursor: grabbing;
+    }
+  }
+}
+
+.keyboard_grid {
+  display: grid;
+  grid-template-columns: repeat(11, 8.2%) 1fr;
+  grid-template-rows: repeat(5, 20.3%);
+
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  padding: 1.2px 0.8px 1.2px 1.2px;
+
+  @include phones {
+    padding: 1.2px 0.8px 2.2px 1.2px;
+  }
+
+  .DEL,
+  .ENTER,
+  .SPACE {
+    grid-column: 12 / 13;
+  }
+
+  .ENTER {
+    grid-row: 3 / 5;
+
+    img {
+      width: 90%;
+      height: 70%;
+      object-fit: contain;
+    }
+  }
+
+  .DEL img {
+    width: 70%;
+    height: 52%;
+    object-fit: contain;
+  }
+
+  .SPACE img {
+    width: 90%;
+    height: 40%;
+    object-fit: contain;
+  }
+
+  div.key_container {
+    &:nth-child(12) {
+      grid-column: 1 / 2;
+    }
+  }
+
+  &.dragging div:hover {
+    cursor: grabbing;
+  }
+}
+
+@mixin base-key {
+  @include flexcenter;
+  background-color: $key-bg;
+  color: $key-color;
+  border: 1.5px solid $clear-bg;
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+
+  @include phones {
+    border: 0.8px solid $clear-bg;
+  }
+
+  &:active {
+    z-index: 4;
+  }
+}
+
+.key_container {
+  @include flexcenter;
+  position: relative;
+  font-size: 175%;
+
+  @include small-height-devices {
+    font-size: 150%;
+  }
+
+  @include landscape-tablet-up {
+    font-size: 160%;
+  }
+
+  @include phones {
+    font-size: 130%;
+  }
+
+  @include small-phones {
+    font-size: 120%;
+  }
+
+  @include tiny-phones {
+    font-size: 90%;
+  }
+
+  .regular_key {
+    @include base-key;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+}

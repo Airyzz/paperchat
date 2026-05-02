@@ -1,0 +1,326 @@
+@import "../main.scss";
+
+.octagon_outside {
+  width: 100%;
+  z-index: 1;
+  position: relative;
+  @include flexcenter;
+  @include pixelated-rectangle;
+  background-color: $clear-bg;
+  margin-top: 4px;
+
+  &:first-child {
+    margin-top: 0px;
+  }
+
+  &.blur {
+    filter: blur(0.5px);
+  }
+
+  @keyframes goUp {
+    0% {
+      max-height: 0;
+      min-height: 0;
+    }
+
+    100% {
+      max-height: 200px;
+    }
+  }
+
+  &.animate_growth {
+    animation: goUp 0.2s linear;
+
+    @include phones {
+      animation: none;
+    }
+  }
+
+  &.paperchat_octagon {
+    height: 12%;
+    min-height: 12%;
+    background-color: $dark-gray;
+
+    &:first-child {
+      margin-top: auto;
+    }
+
+    .octagon_outline {
+      background-color: $clear-bg;
+
+      .octagon_content {
+        justify-content: flex-start;
+        background-color: $dark-gray;
+        color: $dim-beige;
+        text-transform: uppercase;
+
+        @include landscape-tablet-up {
+          font-size: 25px;
+          padding-bottom: 1px;
+        }
+
+        @include phones {
+          font-size: 22px;
+          padding-left: 8px;
+        }
+
+        @include tiny-phones {
+          font-size: 17px;
+        }
+      }
+    }
+  }
+
+  &.info {
+    height: 11%;
+    min-height: 11%;
+    background-color: #000;
+
+    .octagon_outline {
+      background-color: $clear-bg;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      .octagon_content {
+        background-color: #000;
+        color: $clear-bg;
+        font-size: 28px;
+        justify-content: flex-start;
+
+        span {
+          margin-right: 5px;
+        }
+
+        .now_entering,
+        .now_leaving {
+          line-height: 1.2;
+
+          .room_code {
+            border-width: 4px 3px 4px 3px;
+            border-style: solid;
+            display: inline-block;
+            transform: scaleY(0.6);
+            padding: 0px 3px 1px 4px;
+            line-height: 1;
+            font-size: 25px;
+          }
+        }
+
+        .now_entering {
+          color: $now-entering;
+
+          .room_code {
+            border-color: $now-entering;
+          }
+        }
+
+        .now_leaving {
+          color: $now-leaving;
+
+          .room_code {
+            border-color: $now-leaving;
+          }
+        }
+
+        .two_dots {
+          position: relative;
+          top: 1px;
+          margin-right: 8px;
+        }
+
+        @include small-height-devices {
+          font-size: 22px;
+
+          .now_entering .room_code,
+          .now_leaving .room_code {
+            font-size: 18px;
+            border-width: 3px 2px 3px 2px;
+            padding: 0px 2px 0px 3px;
+          }
+        }
+
+        @include landscape-tablet-up {
+          font-size: 25px;
+          padding-bottom: 1px;
+        }
+
+        @include phones {
+          font-size: 22px;
+
+          .now_entering .room_code,
+          .now_leaving .room_code {
+            font-size: 18px;
+            border-width: 3px 2px 3px 2px;
+            padding: 0px 2px 1px 3px;
+            font-weight: 600;
+          }
+
+          .two_dots {
+            top: 0px;
+          }
+        }
+
+        @include tiny-phones {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+
+  &.ja {
+    &.info .octagon_outline .octagon_content {
+      font-size: 18px;
+      letter-spacing: 1px;
+
+      .two_dots {
+        font-size: 20px;
+      }
+
+      @include phones {
+        font-size: 14px;
+      }
+
+      @include tiny-phones {
+        font-size: 10px;
+      }
+    }
+  }
+
+  &:not(.ja) .small_username_text {
+    font-size: 20px;
+
+    @include phones {
+      font-size: 16px;
+    }
+  }
+
+  &.message {
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    .octagon_outline {
+      height: 98%;
+      width: 99.4%;
+      padding: 3px 0;
+
+      .octagon_content {
+        width: 99%;
+        height: max-content;
+        padding: 0;
+
+        img {
+          width: 100%;
+        }
+      }
+    }
+
+    &.short_message {
+      @include pixelated-rectangle-except-bottom-left;
+
+      .octagon_outline {
+        @include pixelated-rectangle-except-bottom-left;
+      }
+
+      .octagon_content {
+        @include pixelated-rectangle-except-bottom-left;
+      }
+    }
+
+    .options_modal {
+      @include flexcenter;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background-color: rgba(17, 17, 17, 0.7);
+      z-index: 1000;
+      color: $clear-bg;
+      font-size: 32px;
+      animation: opacityFadeIn 0.2s ease-in-out;
+
+      @include phones {
+        font-size: 25px;
+      }
+
+      .download_message {
+        transition: all 0.2s ease-in-out;
+        @include flexcenter;
+
+        img {
+          width: 30px;
+          height: 30px;
+          margin-left: 5px;
+
+          @include phones {
+            width: 25px;
+            height: 25px;
+          }
+        }
+
+        &:hover {
+          transform: scale(0.9);
+        }
+      }
+
+      &.smaller_options {
+        font-size: 22px;
+
+        .download_message img {
+          width: 20px;
+          height: 20px;
+        }
+
+        @include phones {
+          font-size: 15px;
+
+          .download_message img {
+            width: 14px;
+            height: 14px;
+          }
+        }
+      }
+
+      &.hide_options {
+        animation: opacityFadeOut 0.2s ease-in-out;
+      }
+    }
+  }
+
+  .octagon_outline {
+    @include pixelated-rectangle;
+    @include flexcenter;
+    width: 99%;
+    height: 90%;
+
+    @include phones {
+      width: 98.8%;
+    }
+
+    .octagon_content {
+      @include pixelated-rectangle;
+      @include flexcenter;
+      padding-left: 10px;
+      padding-bottom: 3px;
+      width: 99.4%;
+      height: 90%;
+      font-family: 'nds', roboto, sans-serif;
+      font-size: 35px;
+      background-color: $clear-bg;
+
+      @include small-height-devices {
+        font-size: 28px;
+        padding-bottom: 1px;
+      }
+
+      @include phones {
+        padding-bottom: 1px;
+        width: 99%;
+        height: 89%;
+        font-size: 20px;
+      }
+    }
+  }
+}

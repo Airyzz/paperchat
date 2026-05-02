@@ -1,0 +1,271 @@
+@import "../main.scss";
+
+
+.top {
+  display: grid;
+  grid-template-columns: 7.5% 1fr;
+  user-select: none;
+  margin: 10px 0 30px 0;
+
+  .left_column {
+    background-color: $clear-bg;
+    box-shadow: 1px 0px 1px $clear-bg;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 10% 3px auto 3px 10%;
+    height: 100%;
+
+    .dotted_border {
+      @include left-column-dotted-separator;
+    }
+
+    .top_section {
+      position: relative;
+      @include flexcenter;
+    }
+
+    .content_indicator {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 8px 0 25% 0;
+      height: 310px;
+
+      @include small-height-devices {
+        height: 252px;
+      }
+
+      @include landscape-tablet-up {
+        height: 220px;
+      }
+
+      @include phones {
+        height: 210px;
+      }
+
+      @include small-phones {
+        height: 180px;
+      }
+
+      @include tiny-phones {
+        height: 140px;
+      }
+
+      .indicator_container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &:first-child {
+          margin-bottom: 4px;
+        }
+
+        &:last-child {
+          margin-top: 4px;
+        }
+
+        @include phones {
+          &:first-child {
+            margin-bottom: 3px;
+          }
+
+          &:last-child {
+            margin-top: 3px;
+          }
+        }
+      }
+
+      .main_container {
+        overflow: hidden;
+      }
+
+      @keyframes grow {
+        0% {
+          transform: scaleY(0);
+        }
+
+        100% {
+          transform: scaleY(1);
+        }
+      }
+
+      .indicator {
+        transform-origin: bottom;
+        height: 4px;
+        min-height: 4px;
+        width: 70%;
+        background-color: $content-visible;
+        filter: blur(0.5px);
+        margin-top: 5px;
+        animation: grow 0.2s ease-in-out;
+
+        &.invisible {
+          background-color: $content-invisible;
+        }
+
+        &.skip_animation {
+          animation: none;
+        }
+
+        &.overflowed_1 {
+          width: 50%;
+        }
+
+        &.overflowed_2 {
+          width: 25%;
+        }
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        @include phones {
+          height: 3px;
+          min-height: 3px;
+          width: 65%;
+          margin-top: 3px;
+
+          &.overflown_1 {
+            width: 45%;
+          }
+
+          &.overflown_2 {
+            width: 20%;
+          }
+        }
+
+        @include tiny-phones {
+          height: 2.5px;
+          min-height: 2.5px;
+        }
+      }
+    }
+
+    .bottom_section {
+      @include flexcenter;
+    }
+
+    @include small-phones {
+      grid-template-rows: 11% 3px auto 3px 10%;
+    }
+  }
+
+  .right_column {
+    @include options-bg;
+
+    display: flex;
+    flex-direction: column;
+    padding: 4px 2px 4px 4px;
+    overflow: scroll;
+    height: 100%;
+
+    // Hide the scrollbar, but allow to scroll.
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.bottom {
+  @include options-bg;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 12% auto 12%;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 12px;
+
+  .bottom_top {
+    @include flexcenter;
+    background-image: url('../../../public/backgrounds/options-gradient-top.png');
+    background-size: contain;
+    border-bottom: 3px solid #333;
+
+    p {
+      font-size: 25px;
+      filter: blur(0.3px);
+
+      @include phones {
+        font-size: 20px;
+      }
+
+      @include small-phones {
+        font-size: 16px;
+      }
+    }
+  }
+
+  &.ja {
+    .bottom_top {
+      p {
+        letter-spacing: 1.5px;
+
+        @include phones {
+          font-size: 18px;
+        }
+
+        @include small-phones {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  &.smaller_section_title {
+    .bottom_top {
+      p {
+        font-size: 22px;
+
+        @include phones {
+          font-size: 18px;
+        }
+
+        @include small-phones {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .room_list {
+    padding: 20px 5px;
+  }
+
+  .bottom_bottom {
+    background-image: url('../../../public/backgrounds/options-gradient-bottom.png');
+    background-size: contain;
+    border-top: 3px solid #333;
+    position: relative;
+    z-index: 100;
+    @include flexcenter;
+
+    &.higher_z_index {
+      z-index: 2000;
+    }
+
+    .bottom_btn_container {
+      height: 70%;
+      min-width: 150px;
+      width: max-content;
+
+      @include phones {
+        width: 120px;
+      }
+
+      @include small-phones {
+        height: 20px;
+      }
+
+      @include tiny-phones {
+        width: 100px;
+        height: 16px;
+      }
+    }
+  }
+}

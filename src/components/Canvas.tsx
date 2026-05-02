@@ -1,7 +1,7 @@
 import styles from '../styles/components/canvas.module.scss'
 import React, { useEffect, useState, useRef } from 'react'
 import useTranslation from '../i18n/useTranslation'
-import emitter from 'helpers/MittEmitter'
+import emitter from '../helpers/MittEmitter'
 import { ClientPos, PositionObj, HistoryStroke } from '../types/Position'
 import {
   getPercentage,
@@ -12,7 +12,7 @@ import {
   playSound,
   keepOnlyShadesOfGray,
   containsNonLatinChars
-} from 'helpers/helperFunctions'
+} from '../helpers/helperFunctions'
 
 const { canvas_outline, canvas_content, usernameRectangle } = styles
 

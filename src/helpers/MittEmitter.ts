@@ -1,0 +1,29 @@
+import mitt, { Emitter } from 'mitt'
+import { CanvasData, FirebaseMessage, RoomContent } from '../types/Room'
+
+
+
+type Events = {
+  typeKey: string
+  typeSpace: string
+  typeEnter: string
+  typeDel: string
+  draggingKey: string
+  sendMessage: string
+  canvasData: CanvasData
+  receivedFirebaseMessages: FirebaseMessage[]
+  lostConnection: string
+  backOnline: string
+  roomUsersUpdate: string[]
+  disbandedRoom: string
+  fullRoom: string
+  otherError: string
+  canvasToCopy: string
+  removedAllCapacitorListeners: string
+  disbandedInactive: string,
+  matrixEvent: RoomContent[],
+}
+
+const emitter: Emitter<Events> = mitt<Events>()
+
+export default emitter

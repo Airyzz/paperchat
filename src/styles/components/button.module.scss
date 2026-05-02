@@ -1,0 +1,170 @@
+@import "../../styles/main.scss";
+
+.button_outer {
+  height: 100%;
+  width: 100%;
+
+  @include ds-font;
+  font-size: 24px;
+  color: #111;
+  padding: 0 1px;
+  position: relative;
+  border: 2px solid $dark-gray;
+  background-color: $clear-bg;
+  transition: all 0.2s ease-in-out;
+
+  &.room_top_row_btn {
+    min-width: 118px;
+    width: max-content;
+    height: 84%;
+    font-size: 18px;
+    margin-right: 7px;
+    filter: blur(0.4px);
+
+    .button_inner {
+      border-top: 1px solid #cdcdcd;
+    }
+
+    @include phones {
+      font-size: 14px;
+      margin-right: 3px;
+      min-width: unset;
+    }
+
+    @include small-phones {
+      font-size: 12px;
+      margin-right: 3px;
+    }
+
+    @include ipad-pro-11 {
+      filter: blur(0px);
+    }
+
+    @include tiny-phones {
+      font-size: 8px;
+      width: 70px;
+      filter: blur(0.2px);
+    }
+  }
+
+  &.ja {
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
+
+  &.ja_smaller {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+
+    @include phones {
+      font-size: 10px;
+    }
+
+    @include small-phones {
+      font-size: 9px;
+    }
+  }
+
+  // Remove one pixel from each border
+  clip-path: polygon(0px 2px,
+    2px 2px,
+    2px 0px,
+    calc(100% - 2px) 0px,
+    calc(100% - 2px) 2px,
+    100% 2px,
+    100% calc(100% - 2px),
+    calc(100% - 2px) calc(100% - 2px),
+    calc(100% - 2px) 100%,
+    2px 100%,
+    2px calc(100% - 2px),
+    0px calc(100% - 2px));
+
+  .button_inner {
+    @include flexcenter;
+    background-image: url('../../../public/backgrounds/btn-gradient.png');
+    background-size: contain;
+    border-top: 2px solid #cdcdcd;
+    border-left: 2px solid #cdcdcd70;
+    border-right: 2px solid #cdcdcd70;
+    height: 93%;
+    padding: 1px 8px;
+    filter: blur(0.3px);
+
+    @include ipad-pro-11 {
+      filter: blur(0.1px);
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: #acacac;
+  }
+
+  &:active {
+    top: 1px;
+  }
+
+  @include small-height-devices {
+    font-size: 20px;
+  }
+
+  @include landscape-tablet-up {
+    font-size: 20px;
+  }
+
+  @include phones {
+    font-size: 18px;
+
+    .button_inner {
+      padding-bottom: 2px;
+    }
+
+    &.ja {
+      font-size: 12px;
+    }
+  }
+
+  @include small-phones {
+    font-size: 16px;
+
+    .button_inner {
+      padding-bottom: 3px;
+    }
+  }
+
+  @include tiny-phones {
+    font-size: 14px;
+  }
+
+  &.smaller_font {
+    font-size: 22px;
+
+    @include phones {
+      font-size: 16px;
+    }
+
+    @include small-phones {
+      font-size: 14px;
+
+      .button_inner {
+        padding-bottom: 3px;
+      }
+    }
+
+    &.room_top_row_btn {
+      font-size: 18px;
+
+      @include small-height-devices {
+        font-size: 14px;
+      }
+
+      @include phones {
+        font-size: 12px;
+      }
+
+      @include small-phones {
+        font-size: 9.5px;
+      }
+    }
+  }
+}

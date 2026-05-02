@@ -1,0 +1,695 @@
+// VARIABLES
+$app-bg: #efefef;
+
+$clear-bg: #fbfbfb;
+$green-border: #5a8d5a;
+$wifi-bg: #2ebc00;
+$wifi-antenna: #888888;
+$content-visible: #415969;
+$content-invisible: #b2c3db;
+$dark-gray: #696969;
+$key-bg: #ebebeb;
+$key-color: #424242;
+$special-key-bg: #cbcbcb;
+$send-area-bg: #dbdbdb;
+$send-area-active-bg: #b2c3db;
+$transparent-gray: #69696994;
+$dim-beige: #d6d2cb;
+$mellow-yellow: #f9ed71;
+$strong-yellow: #fbd300;
+$now-entering: #ddec00;
+$now-leaving: #18e0c5;
+$strong-orange: #fb6900;
+$scrollbar-color: rgba(228, 228, 228, 0.6);
+$scrollbar-color-dark: rgba(132, 132, 132, 0.6);
+
+@font-face {
+  font-family: 'nds';
+  src: url('../../public/fonts/nds.ttf') format('truetype');
+}
+
+// MIXINS
+@mixin tiny-phones {
+  @media (max-width: 320px) {
+    @content;
+  }
+}
+
+@mixin small-phones {
+  @media (max-width: 390px) {
+    @content;
+  }
+}
+
+@mixin phones {
+  @media (max-width: 500px) {
+    @content;
+  }
+}
+
+@mixin landscape-tablet-up {
+  @media (max-width: 750px) {
+    @content;
+  }
+}
+
+@mixin landscape-phones {
+  @media (max-height: 600px) and (min-width: 500px) {
+    @content;
+  }
+}
+
+@mixin ipad-pro-11 {
+  @media (min-width: 800px) and (max-width: 835px) and (min-height: 1050px) and (max-height: 1195px) {
+    @content;
+  }
+}
+
+@mixin small-height-devices {
+  @media (min-width: 1200px) and (max-width: 1536px) and (max-height: 920px) {
+    @content;
+  }
+}
+
+@mixin standard-laptop {
+  @media (max-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin large-monitor {
+  @media (max-width: 1380px) {
+    @content;
+  }
+}
+
+@mixin flexcenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flexcenter-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@mixin options-bg {
+  background-image: url('../../public/backgrounds/options-bg.png');
+  background-size: cover;
+}
+
+@mixin left-column-dotted-separator {
+  height: 0;
+  width: 100%;
+  display: block;
+  border-top: dotted 3px $green-border;
+  filter: blur(0.6px);
+
+  @include phones {
+    border-width: 2px;
+  }
+}
+
+@mixin ds-font {
+  font-family: 'nds', roboto, sans-serif;
+}
+
+@mixin pixelated-rectangle {
+  clip-path: polygon(0px 8px,
+      2px 8px,
+      2px 6px,
+      4px 6px,
+      4px 4px,
+      6px 4px,
+      6px 2px,
+      8px 2px,
+      8px 0px,
+      calc(100% - 8px) 0px,
+      calc(100% - 8px) 2px,
+      calc(100% - 6px) 2px,
+      calc(100% - 6px) 4px,
+      calc(100% - 4px) 4px,
+      calc(100% - 4px) 6px,
+      calc(100% - 2px) 6px,
+      calc(100% - 2px) 8px,
+      100% 8px,
+      100% calc(100% - 8px),
+      calc(100% - 2px) calc(100% - 8px),
+      calc(100% - 2px) calc(100% - 6px),
+      calc(100% - 4px) calc(100% - 6px),
+      calc(100% - 4px) calc(100% - 4px),
+      calc(100% - 6px) calc(100% - 4px),
+      calc(100% - 6px) calc(100% - 2px),
+      calc(100% - 8px) calc(100% - 2px),
+      calc(100% - 8px) 100%,
+      8px 100%,
+      8px calc(100% - 2px),
+      6px calc(100% - 2px),
+      6px calc(100% - 4px),
+      4px calc(100% - 4px),
+      4px calc(100% - 6px),
+      2px calc(100% - 6px),
+      2px calc(100% - 8px),
+      0px calc(100% - 8px)) !important;
+
+  @include phones {
+    clip-path: polygon(0px 4px,
+        1px 4px,
+        1px 3px,
+        2px 3px,
+        2px 2px,
+        3px 2px,
+        3px 1px,
+        4px 1px,
+        4px 0px,
+        calc(100% - 4px) 0px,
+        calc(100% - 4px) 1px,
+        calc(100% - 3px) 1px,
+        calc(100% - 3px) 2px,
+        calc(100% - 2px) 2px,
+        calc(100% - 2px) 3px,
+        calc(100% - 1px) 3px,
+        calc(100% - 1px) 4px,
+        100% 4px,
+        100% calc(100% - 4px),
+        calc(100% - 1px) calc(100% - 4px),
+        calc(100% - 1px) calc(100% - 3px),
+        calc(100% - 2px) calc(100% - 3px),
+        calc(100% - 2px) calc(100% - 2px),
+        calc(100% - 3px) calc(100% - 2px),
+        calc(100% - 3px) calc(100% - 1px),
+        calc(100% - 4px) calc(100% - 1px),
+        calc(100% - 4px) 100%,
+        4px 100%,
+        4px calc(100% - 1px),
+        3px calc(100% - 1px),
+        3px calc(100% - 2px),
+        2px calc(100% - 2px),
+        2px calc(100% - 3px),
+        1px calc(100% - 3px),
+        1px calc(100% - 4px),
+        0px calc(100% - 4px)) !important;
+  }
+}
+
+@mixin pixelated-rectangle-except-left {
+  clip-path: polygon(0px 8px,
+      0px 8px,
+      0px 6px,
+      0px 6px,
+      0px 4px,
+      0px 4px,
+      0px 2px,
+      0px 0px,
+      8px 0px,
+      calc(100% - 8px) 0px,
+      calc(100% - 8px) 2px,
+      calc(100% - 6px) 2px,
+      calc(100% - 6px) 4px,
+      calc(100% - 4px) 4px,
+      calc(100% - 4px) 6px,
+      calc(100% - 2px) 6px,
+      calc(100% - 2px) 8px,
+      100% 8px,
+      100% calc(100% - 8px),
+      calc(100% - 2px) calc(100% - 8px),
+      calc(100% - 2px) calc(100% - 6px),
+      calc(100% - 4px) calc(100% - 6px),
+      calc(100% - 4px) calc(100% - 4px),
+      calc(100% - 6px) calc(100% - 4px),
+      calc(100% - 6px) calc(100% - 2px),
+      calc(100% - 8px) calc(100% - 2px),
+      calc(100% - 8px) 100%,
+      8px 100%,
+      8px calc(100% - 0px),
+      6px calc(100% - 0px),
+      6px calc(100% - 0px),
+      4px calc(100% - 0px),
+      0px calc(100% - 0px),
+      2px calc(100% - 0px),
+      0px calc(100% - 0px),
+      0px calc(100% - 0px));
+
+  @include phones {
+    clip-path: polygon(0px 4px,
+        0px 4px,
+        0px 3px,
+        0px 3px,
+        0px 2px,
+        0px 2px,
+        0px 1px,
+        0px 1px,
+        4px 0px,
+        calc(100% - 4px) 0px,
+        calc(100% - 4px) 1px,
+        calc(100% - 3px) 1px,
+        calc(100% - 3px) 2px,
+        calc(100% - 2px) 2px,
+        calc(100% - 2px) 3px,
+        calc(100% - 1px) 3px,
+        calc(100% - 1px) 4px,
+        100% 4px,
+        100% calc(100% - 4px),
+        calc(100% - 1px) calc(100% - 4px),
+        calc(100% - 1px) calc(100% - 3px),
+        calc(100% - 2px) calc(100% - 3px),
+        calc(100% - 2px) calc(100% - 2px),
+        calc(100% - 3px) calc(100% - 2px),
+        calc(100% - 3px) calc(100% - 1px),
+        calc(100% - 4px) calc(100% - 1px),
+        calc(100% - 4px) 100%,
+        4px 100%,
+        4px calc(100% - 0px),
+        3px calc(100% - 0px),
+        3px calc(100% - 0px),
+        2px calc(100% - 0px),
+        2px calc(100% - 0px),
+        1px calc(100% - 0px),
+        1px calc(100% - 0px),
+        0px calc(100% - 0px));
+  }
+}
+
+@mixin pixelated-rectangle-except-right {
+  clip-path: polygon(0px 8px,
+      2px 8px,
+      2px 6px,
+      4px 6px,
+      4px 4px,
+      6px 4px,
+      6px 2px,
+      8px 2px,
+      8px 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      100% 0px,
+      100% calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) 100%,
+      8px 100%,
+      8px calc(100% - 2px),
+      6px calc(100% - 2px),
+      6px calc(100% - 4px),
+      4px calc(100% - 4px),
+      4px calc(100% - 6px),
+      2px calc(100% - 6px),
+      2px calc(100% - 8px),
+      0px calc(100% - 8px)) !important;
+
+  @include phones {
+    clip-path: polygon(0px 4px,
+        1px 4px,
+        1px 3px,
+        2px 3px,
+        2px 2px,
+        3px 2px,
+        3px 1px,
+        4px 1px,
+        4px 0px,
+        calc(100% - 0px) 0px,
+        calc(100% - 0px) 0px,
+        calc(100% - 0px) 0px,
+        calc(100% - 0px) 0px,
+        calc(100% - 0px) 0px,
+        calc(100% - 0px) 0px,
+        calc(100% - 0px) 0px,
+        calc(100% - 0px) 0px,
+        100% 0px,
+        100% calc(100% - 0px),
+        calc(100% - 0px) calc(100% - 0px),
+        calc(100% - 0px) calc(100% - 0px),
+        calc(100% - 0px) calc(100% - 0px),
+        calc(100% - 0px) calc(100% - 0px),
+        calc(100% - 0px) calc(100% - 0px),
+        calc(100% - 0px) calc(100% - 0px),
+        calc(100% - 0px) calc(100% - 0px),
+        calc(100% - 0px) 100%,
+        4px 100%,
+        4px calc(100% - 1px),
+        3px calc(100% - 1px),
+        3px calc(100% - 2px),
+        2px calc(100% - 2px),
+        2px calc(100% - 3px),
+        1px calc(100% - 3px),
+        1px calc(100% - 4px),
+        0px calc(100% - 4px)) !important;
+  }
+}
+
+@mixin pixelated-top-left-small {
+  clip-path: polygon(0px 4px,
+      1px 4px,
+      1px 3px,
+      2px 3px,
+      2px 2px,
+      3px 2px,
+      3px 1px,
+      4px 1px,
+      4px 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      calc(100% - 0px) 0px,
+      100% 0px,
+      100% calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) calc(100% - 0px),
+      calc(100% - 0px) 100%,
+      0px 100%,
+      0px calc(100% - 0px),
+      0px calc(100% - 0px),
+      0px calc(100% - 0px),
+      0px calc(100% - 0px),
+      0px calc(100% - 0px),
+      0px calc(100% - 0px),
+      0px calc(100% - 0px),
+      0px calc(100% - 0px)) !important;
+}
+
+div.main {
+  --backToCornerWidth: 35%;
+
+  @include small-phones() {
+    --backToCornerWidth: 50%;
+  }
+}
+
+@mixin pixelated-rectangle-except-bottom-left {
+  clip-path: polygon(0px 8px,
+      2px 8px,
+      2px 6px,
+      4px 6px,
+      4px 4px,
+      6px 4px,
+      6px 2px,
+      8px 2px,
+      8px 0px,
+      calc(100% - 8px) 0px,
+      calc(100% - 8px) 2px,
+      calc(100% - 6px) 2px,
+      calc(100% - 6px) 4px,
+      calc(100% - 4px) 4px,
+      calc(100% - 4px) 6px,
+      calc(100% - 2px) 6px,
+      calc(100% - 2px) 8px,
+      100% 8px,
+      100% calc(100% - 8px),
+      calc(100% - 2px) calc(100% - 8px),
+      calc(100% - 2px) calc(100% - 6px),
+      calc(100% - 4px) calc(100% - 6px),
+      calc(100% - 4px) calc(100% - 4px),
+      calc(100% - 6px) calc(100% - 4px),
+      calc(100% - 6px) calc(100% - 2px),
+      calc(100% - 8px) calc(100% - 2px),
+      calc(100% - 8px) 100%,
+      8px 100%,
+      8px calc(100% - 0px),
+      0px calc(100% - 0px),
+      0px calc(100% - 0px),
+      0px calc(100% - 0px),
+      0px calc(100% - 6px),
+      2px calc(100% - 0px),
+      0px calc(100% - 0px),
+      0px calc(100% - 0px)) !important;
+
+  @include phones {
+    clip-path: polygon(0px 4px,
+        1px 4px,
+        1px 3px,
+        2px 3px,
+        2px 2px,
+        3px 2px,
+        3px 1px,
+        4px 1px,
+        4px 0px,
+        calc(100% - 4px) 0px,
+        calc(100% - 4px) 1px,
+        calc(100% - 3px) 1px,
+        calc(100% - 3px) 2px,
+        calc(100% - 2px) 2px,
+        calc(100% - 2px) 3px,
+        calc(100% - 1px) 3px,
+        calc(100% - 1px) 4px,
+        100% 4px,
+        100% calc(100% - 4px),
+        calc(100% - 1px) calc(100% - 4px),
+        calc(100% - 1px) calc(100% - 3px),
+        calc(100% - 2px) calc(100% - 3px),
+        calc(100% - 2px) calc(100% - 2px),
+        calc(100% - 3px) calc(100% - 2px),
+        calc(100% - 3px) calc(100% - 1px),
+        calc(100% - 4px) calc(100% - 1px),
+        calc(100% - 4px) 100%,
+        4px 100%,
+        8px calc(100% - 0px),
+        0px calc(100% - 0px),
+        0px calc(100% - 0px),
+        0px calc(100% - 0px),
+        0px calc(100% - 6px),
+        2px calc(100% - 0px),
+        0px calc(100% - 0px),
+        0px calc(100% - 0px)) !important;
+  }
+}
+
+@keyframes opacityFadeIn {
+  0% {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  100% {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+@keyframes opacityFadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes binaryBlink {
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  padding-bottom: env(safe-area-inset-bottom);
+  background-color: $app-bg;
+  scrollbar-gutter: stable;
+
+  * {
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+}
+
+:root {
+  color-scheme: light only;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.floating_key {
+  @include ds-font;
+  color: $key-color;
+  position: absolute;
+}
+
+.main {
+  background-color: $app-bg;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.screens_section {
+  width: 550px;
+  min-height: 900px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+
+  @include small-height-devices {
+    width: 450px;
+    min-height: 720px;
+  }
+
+  @include landscape-tablet-up {
+    min-width: 400px;
+    width: 75vw;
+    min-height: unset;
+  }
+
+  @include phones {
+    min-width: 200px;
+    width: 95vw;
+    height: 95vh;
+  }
+
+  @include landscape-phones {
+    min-height: 900px;
+
+    @media (min-width: 700px) {
+      margin: 4% 0;
+    }
+  }
+
+  @include small-height-devices {
+    margin: 60px 0;
+  }
+}
+
+.screen {
+  aspect-ratio: 4 / 3;
+  border: 4px solid #333;
+  max-height: 500px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 2px 3px 6px #222;
+  @include ds-font;
+}
+
+.modal_cover {
+  background-color: rgb(34 34 34 / 80%);
+  height: 100%;
+  width: 101%;
+  position: absolute;
+  z-index: 1000;
+  transition: all 0.2s ease-in-out;
+}
+
+// Add a pretty cross-browser scrollbar
+.scrollify {
+  overflow-y: scroll;
+
+  @supports (not selector(::-webkit-scrollbar)) {
+    scrollbar-width: thin;
+    scrollbar-color: transparent;
+  }
+
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $scrollbar-color;
+    border-radius: 6px;
+    // border: 3px solid $scrollbar-color;
+  }
+
+  &.scrollify-dark {
+    &::-webkit-scrollbar-thumb {
+      background-color: $scrollbar-color-dark;
+    }
+  }
+}
+
+.justify_between_around {
+  justify-content: space-between !important;
+
+  @include phones {
+    justify-content: space-around !important;
+  }
+}
+
+.justify_around {
+  justify-content: space-around !important;
+}
+
+.justify_evenly {
+  justify-content: space-evenly !important;
+}
+
+.d_none {
+  display: none;
+}
+
+.disabled_opacity {
+  filter: opacity(0.8);
+}
+
+.no_pointer_events {
+  pointer-events: none;
+}
+
+.page_404 {
+  @include ds-font;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  height: 90vh;
+
+  h1,
+  h2,
+  span {
+    font-size: 42px;
+    font-weight: 500;
+  }
+
+  @include small-phones {
+
+    h1,
+    h2,
+    span {
+      font-size: 35px;
+    }
+  }
+}

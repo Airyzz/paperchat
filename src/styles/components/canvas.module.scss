@@ -1,0 +1,59 @@
+@import "../main.scss";
+
+.canvas_outline {
+  width: 99.4%;
+  height: 98%;
+  @include pixelated-rectangle;
+  @include flexcenter;
+
+  .canvas_content {
+    width: 99%;
+    height: 97.4%;
+    position: relative;
+    background-color: $clear-bg;
+    @include pixelated-rectangle;
+    @include flexcenter;
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      z-index: 12;
+      touch-action: none;
+      filter: blur(0.3px);
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      touch-action: none;
+      z-index: 10;
+
+      @include landscape-tablet-up {
+        height: 103%;
+      }
+    }
+
+    img#usernameRectangle {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: auto;
+      height: 23%;
+      z-index: 1000;
+
+      @media (resolution=1dppx) and (max-width: 1400px) {
+        height: 24%;
+      }
+
+      @media (resolution >=2dppx) {
+        height: 22%;
+      }
+
+      @media (resolution >=3dppx) {
+        height: 21.3%;
+      }
+    }
+  }
+}

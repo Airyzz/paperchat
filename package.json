@@ -1,46 +1,53 @@
 {
-  "name": "paperchat",
-  "version": "3.0.0",
-  "author": "Ricardo Sandez",
+  "name": "my-app",
+  "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "engines": {
-    "node": ">= 20.19.5"
-  },
   "dependencies": {
-    "@capacitor/android": "^7.0.0",
-    "@capacitor/app": "^7.0.0",
-    "@capacitor/browser": "^7.0.3",
-    "@capacitor/clipboard": "^7.0.0",
-    "@capacitor/core": "^7.0.0",
-    "@capacitor/keyboard": "^7.0.4",
-    "@capacitor/local-notifications": "^7.0.0",
-    "@capacitor/splash-screen": "^7.0.3",
-    "@capacitor/status-bar": "^7.0.4",
     "@matrix-widget-toolkit/api": "^5.0.3",
-    "@reduxjs/toolkit": "^1.8.5",
-    "firebase": "^9.10.0",
+    "@reduxjs/toolkit": "^2.11.2",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.126",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "howler": "^2.2.4",
-    "mitt": "^3.0.0",
-    "next": "^14.2.24",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-redux": "^8.0.2"
+    "mitt": "^3.0.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-redux": "^9.2.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "@capacitor/cli": "^7.0.0",
-    "@types/howler": "^2.2.11",
-    "@types/node": "18.0.3",
-    "@types/react": "^18.0.10",
-    "@types/react-dom": "^18.0.4",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "^14.2.24",
-    "sass": "^1.53.0",
-    "typescript": "5.4"
+    "@types/howler": "^2.2.12",
+    "sass": "^1.99.0"
   }
 }
