@@ -6,7 +6,6 @@ import type { AppProps } from 'next/app'
 import { store } from 'store/store'
 import { Provider } from 'react-redux'
 import { I18nProvider } from 'i18n/I18nContext'
-import { firebaseInit } from 'firebase-config/init'
 import Head from 'next/head'
 import AppUrlListener from 'components/AppUrlListener'
 import AppNotificationsCleaner from 'components/AppNotificationsCleaner'
@@ -17,15 +16,14 @@ import { useEffect } from 'react'
 import { wait } from 'helpers/helperFunctions'
 
 if (typeof window !== 'undefined') {
-  firebaseInit()
 
   // Samsung's browser ignores color-scheme.
   if (navigator.userAgent.match(/samsung/i)) {
     alert(
       'Your browser (Samsung Internet) is not designed to show this ' +
-        'app correctly. Please consider switching to any popular ' +
-        'standards-compliant browser instead. \n\n' +
-        'We recommend Google Chrome, Firefox, or Microsoft Edge.'
+      'app correctly. Please consider switching to any popular ' +
+      'standards-compliant browser instead. \n\n' +
+      'We recommend Google Chrome, Firefox, or Microsoft Edge.'
     )
   }
 }

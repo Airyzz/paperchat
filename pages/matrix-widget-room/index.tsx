@@ -1,3 +1,5 @@
+
+
 import general_styles from 'styles/options-screen/options.module.scss'
 import page_styles from 'styles/room/room.module.scss'
 import home_styles from 'styles/home/home.module.scss'
@@ -38,6 +40,8 @@ import UsernameInput from 'components/UsernameInput'
 import getRandomUsername from 'helpers/username-generator/usernameGenerator'
 import { App } from '@capacitor/app'
 import { Capacitor } from '@capacitor/core'
+import { WidgetApi, WidgetApiImpl } from '@matrix-widget-toolkit/api';
+import { EventDirection, WidgetEventCapability } from 'matrix-widget-api';
 
 const {
   username_form,
@@ -80,7 +84,121 @@ const {
   letter
 } = page_styles
 
+const runOnClient = (func: () => any) => {
+  if (typeof window !== "undefined") {
+    if (window.document.readyState == "loading") {
+      window.addEventListener("load", func);
+    } else {
+      func();
+    }
+  }
+};
+
+var createdWidget = false;
+var widget: WidgetApi | null = null;
+
+const EVENT_TYPE = "xyz.airyz.paperchat.msg";
+
+runOnClient(async () => {
+  if (createdWidget == false) {
+    console.log("Initializing widget api");
+    createdWidget = true;
+
+    widget = await WidgetApiImpl.create();
+
+    await widget!.requestCapabilities([
+      "org.matrix.msc4039.upload_file",
+      "org.matrix.msc4039.download_file",
+      WidgetEventCapability.forRoomEvent(EventDirection.Send, EVENT_TYPE),
+      WidgetEventCapability.forRoomEvent(EventDirection.Receive, EVENT_TYPE)
+    ]);
+
+    let content: RoomContent[] = [];
+
+
+
+    const subscription = widget
+      .observeRoomEvents(EVENT_TYPE, {
+      })
+      .subscribe(async (event) => {
+        console.log("Received room event");
+        console.log(event);
+        // Callback is called every time a room event is received
+
+        if ((event.content as any)["url"] != null) {
+          var url = (event.content as any)["url"];
+
+          var result = await widget?.downloadFile(url)!;
+
+          if (!(result.file instanceof Blob)) {
+            throw new Error('Got non Blob file response');
+          }
+
+          const downloadedFileDataUrl = URL.createObjectURL(result.file);
+          console.log(downloadedFileDataUrl);
+
+
+
+          var ev: RoomContent = {
+            imageURL: downloadedFileDataUrl,
+            serverTs: event['origin_server_ts'],
+            id: event.event_id,
+            animate: true,
+            color: hashColor(event.sender),
+            author: event.sender,
+            platform: "web"
+          }
+
+          const newContent = [
+            ...content,
+            ev
+          ].toSorted((a, b) => a.serverTs - b.serverTs);
+
+          content = newContent;
+
+          emitter.emit('matrixEvent', content);
+        }
+      });
+
+  }
+})
+
+function hashCode(str: string) {
+  let hash = 0;
+  let i;
+  let chr;
+  if (str.length === 0) {
+    return hash;
+  }
+  for (i = 0; i < str.length; i += 1) {
+    chr = str.charCodeAt(i);
+    // eslint-disable-next-line no-bitwise
+    hash = ((hash << 5) - hash) + chr;
+    // eslint-disable-next-line no-bitwise
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+function hashColor(str: string) {
+  const colorNumber = hashCode(str) % 8;
+
+  return [
+    "#368BD6",
+    "#AC3BA8",
+    "#03B381",
+    "#E64F7A",
+    "#FF812D",
+    "#2DC2C5",
+    "#5C56F5",
+    "#74D12C",
+  ][colorNumber];
+}
+
 const Room = () => {
+
+
+
   const router = useRouter()
   const { t, locale, changeLocale } = useTranslation()
 
@@ -99,7 +217,7 @@ const Room = () => {
       platform: Capacitor.getPlatform()
     }
   ])
-  const [roomColor] = useState(getRandomColor())
+  const [roomColor, setRoomColor] = useState(getRandomColor())
   const [adjacentMessages, setAdjacentMessages] = useState({ up: '', down: '' })
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
@@ -120,18 +238,37 @@ const Room = () => {
   const typeDel = () => emitter.emit('typeDel', '')
   const sendMessage = () => emitter.emit('sendMessage', '')
 
+
+  emitter.on('matrixEvent', (e) => {
+
+
+    setRoomContent(e)
+
+    setTimeout(() => scrollContent(), 100)
+
+    console.log("Received matrix event");
+  });
+
   useEffect(() => {
     showLoadingDialog()
-    const savedUsername = localStorage.getItem('username')
+    const fragQueryString = window.location.hash;
+    const fragUrlParams = new URLSearchParams(window.location.hash.split("?")[1]);
+    console.log(fragQueryString);
 
-    if (!savedUsername || !isUsernameValid(savedUsername)) {
+    var userId = fragUrlParams.get("matrix_user_id")!;
+
+    const savedUsername = userId;
+
+    setRoomColor(hashColor(userId));
+
+    if (!savedUsername) {
       setDialogData(baseDialogData)
-      const randomUsername = getRandomUsername()
+      const randomUsername = "Random Username!";// getRandomUsername()
       setMustSetUsername(true)
       setUsernameInputValue(randomUsername)
       setUsernameBeingEdited(randomUsername)
     } else {
-      dispatch(setUsername(savedUsername.substring(0, usernameMaxLength).trim()))
+      dispatch(setUsername(savedUsername.trim()))
       initializeRoom(savedUsername)
     }
   }, [])
@@ -210,18 +347,43 @@ const Room = () => {
       )
     }
 
-    setRoomContent([
-      ...roomContent,
-      {
-        imageURL: dataUrl,
-        id: getSimpleId(),
-        author: userLocalID,
-        animate: !messagesWillTriggerScroll,
-        color: roomColor,
-        serverTs: Date.now(),
-        platform: Capacitor.getPlatform()
-      }
-    ])
+    // setRoomContent([
+    //   ...roomContent,
+    //   {
+    //     imageURL: dataUrl,
+    //     id: getSimpleId(),
+    //     author: userLocalID,
+    //     animate: !messagesWillTriggerScroll,
+    //     color: roomColor,
+    //     serverTs: Date.now(),
+    //     platform: Capacitor.getPlatform()
+    //   }
+    // ])
+
+    console.log("Receive canvas data");
+
+    sendMessageToRoom(dataUrl, roomColor)
+  }
+
+  const sendMessageToRoom = async (dataUrl: string, roomColor: string) => {
+
+    const arrayBuffer = await (await fetch(dataUrl)).arrayBuffer();
+    var result = await widget?.uploadFile(arrayBuffer)
+
+    console.log(result);
+
+    if (result != null) {
+      widget?.sendRoomEvent(EVENT_TYPE, {
+        "body": "paperchat.png",
+        "info": {
+          "size": arrayBuffer.byteLength,
+          "mimetype": "image/png",
+        },
+        "msgtype": "m.image",
+        "m.mentions": {},
+        "url": result["content_uri"]
+      });
+    }
   }
 
   const getRoomContent = () => {
@@ -577,11 +739,6 @@ const Room = () => {
           <div className={top_buttons_row}>
             <MultilangButton onButtonClick={openLanguageModal} useSmallVersion />
             <MuteSoundsButton useSmallVersion />
-
-            <div className={`${close_btn} ${active_on_click}`} onClick={showAskExitRoomDialog}>
-              <img src="/tool-buttons/close.png" alt={t('IMAGE_ALTS.CLOSE_BUTTON')} />
-              <div className="active_color bright"></div>
-            </div>
           </div>
 
           <div className={canvas_column}>

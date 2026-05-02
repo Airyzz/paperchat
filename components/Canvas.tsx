@@ -392,7 +392,9 @@ const Canvas = ({
       let usernameX = Math.max(8, 6 * (window.devicePixelRatio || 1))
 
       const trimmedUsername = trimTextToWidth(ctxToUse, username, nameContainerWidth - usernameX)
-      ctxToUse.fillText(trimmedUsername, usernameX, firstLineY - 1.5)
+      ctxToUse.fillText(username, usernameX, firstLineY - 1.5)
+      console.log("Drawing username");
+      console.log(username);
       setKeyPos({ x: getStartingX(), y: firstLineY })
 
       firstLineYRef.current = firstLineY
@@ -672,7 +674,7 @@ const Canvas = ({
 
     setCanvasCtx(ctx)
     setDivisionsHeight(Math.floor(canvas.height / 5))
-    setNameContainerWidth(getPercentage(25, canvas.width))
+    setNameContainerWidth(username.length * 8)
 
     usernameRectPixelBorderSize.current = Math.floor(2.4 * Math.min(dpr, 2.5))
   }, [])
