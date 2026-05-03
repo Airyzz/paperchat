@@ -81,19 +81,13 @@ const {
 } = page_styles
 
 const runOnClient = (func: () => any) => {
-  if (typeof window !== "undefined") {
-    if (window.document.readyState == "loading") {
-      window.addEventListener("load", func);
-    } else {
-      func();
-    }
-  }
+  func();
 };
 
 var createdWidget = false;
 var widget: WidgetApi | null = null;
 
-const EVENT_TYPE = "xyz.airyz.paperchat.msg";
+const EVENT_TYPE = "xyz.airyz.papermatrix.message";
 
 runOnClient(async () => {
   if (createdWidget == false) {
@@ -132,6 +126,9 @@ runOnClient(async () => {
 
           const downloadedFileDataUrl = URL.createObjectURL(result.file);
           console.log(downloadedFileDataUrl);
+
+
+
 
 
 
@@ -184,16 +181,22 @@ function hashColor(str: string | null) {
   const colorNumber = hashCode(str) % 8;
 
   return [
-    "#368BD6",
-    "#AC3BA8",
-    "#03B381",
-    "#E64F7A",
-    "#FF812D",
-    "#2DC2C5",
-    "#5C56F5",
-    "#74D12C",
+    "hsla(207, 65%, 53%, 1)",
+    "hsla(302, 49%, 45%, 1)",
+    "hsla(162, 97%, 36%, 1)",
+    "hsla(342, 75%, 60%, 1)",
+    "hsla(25, 100%, 59%, 1)",
+    "hsla(182, 62%, 47%, 1)",
+    "hsla(243, 88%, 65%, 1)",
+    "hsla(94, 67%, 49%, 1)"
   ][colorNumber];
 }
+
+const fragQueryString = window.location.hash;
+const fragUrlParams = new URLSearchParams(window.location.hash.split("?")[1]);
+console.log(fragQueryString);
+
+var userId = fragUrlParams.get("matrix_user_id")!;
 
 const Room = () => {
 
@@ -250,11 +253,7 @@ const Room = () => {
 
   useEffect(() => {
     showLoadingDialog()
-    const fragQueryString = window.location.hash;
-    const fragUrlParams = new URLSearchParams(window.location.hash.split("?")[1]);
-    console.log(fragQueryString);
 
-    var userId = fragUrlParams.get("matrix_user_id")!;
 
     const savedUsername = userId;
 
@@ -262,7 +261,7 @@ const Room = () => {
 
     if (savedUsername) {
       dispatch(setUsername(savedUsername.trim()))
-      initializeRoom(savedUsername)
+      initializeRoom()
     }
   }, [])
 
@@ -285,13 +284,13 @@ const Room = () => {
     }
   }, [dialogData])
 
-  const initializeRoom = (username: string) => {
+  const initializeRoom = () => {
     setRoomContent([
       ...roomContent,
       {
         animate: true,
         id: getSimpleId(),
-        userEntering: username,
+        userEntering: userId,
         serverTs: Date.now(),
         author: userLocalID,
         platform: "web"
@@ -351,7 +350,7 @@ const Room = () => {
     const arrayBuffer = await (await fetch(dataUrl)).arrayBuffer();
     var result = await widget?.uploadFile(arrayBuffer)
 
-    console.log(result);
+    console.log("Sending message to room!");
 
     if (result != null) {
       widget?.sendRoomEvent(EVENT_TYPE, {
@@ -361,7 +360,6 @@ const Room = () => {
           "mimetype": "image/png",
         },
         "msgtype": "m.image",
-        "m.mentions": {},
         "url": result["content_uri"]
       });
     }
@@ -387,6 +385,7 @@ const Room = () => {
           <MessageOctagon
             key={item.id}
             id={item.id}
+            sender={item.author}
             color={item.color}
             img_uri={item.imageURL}
             shouldAnimate={!!item.animate}
@@ -500,7 +499,7 @@ const Room = () => {
     setUsernameInputValue(trimmedUsername)
 
     setMustSetUsername(false)
-    initializeRoom(trimmedUsername)
+    initializeRoom()
   }
 
   const editingUsernameModalCover = () => {
@@ -560,7 +559,7 @@ const Room = () => {
     if (shouldShowCanvas) {
       return (
         <Canvas
-          username={user.username}
+          username={userId}
           usingPencil={usingPencil}
           roomColor={roomColor}
           usingThickStroke={usingThickStroke}

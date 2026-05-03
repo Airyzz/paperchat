@@ -1,6 +1,8 @@
 import styles from '../../styles/components/paperchat-octagon.module.scss'
 import React, { useRef, useState } from 'react'
 import useTranslation from '../../i18n/useTranslation'
+import Canvas from '../Canvas'
+import { getLighterHslaShade } from '../../helpers/helperFunctions'
 
 const {
   octagon_outside,
@@ -12,17 +14,20 @@ const {
   options_modal,
   download_message,
   hide_options,
-  smaller_options
+  smaller_options,
+  name_container,
+  name_container_top,
 } = styles
 
 type MessageOctagonProps = {
   img_uri: string
   color: string
   id: string
+  sender: string,
   shouldAnimate: boolean
 }
 
-const MessageOctagon = ({ img_uri, color, id, shouldAnimate }: MessageOctagonProps) => {
+const MessageOctagon = ({ img_uri, color, id, shouldAnimate, sender }: MessageOctagonProps) => {
   const { t } = useTranslation()
 
   const outlineRef = useRef<HTMLDivElement>(null)
@@ -98,6 +103,8 @@ const MessageOctagon = ({ img_uri, color, id, shouldAnimate }: MessageOctagonPro
     return ''
   }
 
+  var backgroundColor = getLighterHslaShade(color);
+
   return (
     <div
       className={`${octagon_outside} ${message} ${shortMessage ? short_message : ''} ${shouldAnimate ? animate_growth : ''
@@ -108,10 +115,19 @@ const MessageOctagon = ({ img_uri, color, id, shouldAnimate }: MessageOctagonPro
       {renderOptionsModal()}
       <div className={octagon_outline} ref={outlineRef} style={{ backgroundColor: color }}>
         <div className={octagon_content} ref={containerRef}>
+          <div className={`${name_container}`} style={{ position: "absolute", left: "0", top: "0", fontSize: "22px", background: backgroundColor }}>
+            <div className={`${name_container_top}`} style={{ background: color, }}> </div>
+            <div style={{ paddingRight: "1rem", paddingLeft: "1rem", paddingTop: "0.3rem", paddingBottom: "0.4rem" }}>
+              <div style={{ color: color }}>
+                {sender}
+              </div>
+            </div>
+          </div>
           <img src={img_uri} onLoad={handleLoad} ref={imgRef} alt="message" />
         </div>
       </div>
     </div>
+
   )
 }
 

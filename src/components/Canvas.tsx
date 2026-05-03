@@ -648,7 +648,7 @@ const Canvas = ({
         msgCanvas.height
       )
 
-      drawUsernameRectangle(msgCtx, false, false)
+      // drawUsernameRectangle(msgCtx, false, false)
 
       emitter.emit('canvasData', {
         dataUrl: msgCanvas.toDataURL(),
