@@ -38,6 +38,7 @@ import Button from '../../components/Button'
 import UsernameInput from '../../components/UsernameInput'
 import { WidgetApi, WidgetApiImpl } from '@matrix-widget-toolkit/api';
 import { EventDirection, WidgetEventCapability } from 'matrix-widget-api';
+import { base64ToUint8, decodeToDataURL, uint8ToBase64 } from '../../helpers/imageCompression'
 
 const {
   username_form,
@@ -87,8 +88,9 @@ const runOnClient = (func: () => any) => {
 var createdWidget = false;
 var widget: WidgetApi | null = null;
 
-const EVENT_TYPE = "xyz.airyz.papermatrix.message";
-
+const EVENT_TYPE = "xyz.airyz.paperchat.msg";
+const MSG_TYPE = null
+const EVENT_TYPE_FILTER = MSG_TYPE == null ? EVENT_TYPE : `${EVENT_TYPE}#${MSG_TYPE}`;
 runOnClient(async () => {
   if (createdWidget == false) {
     console.log("Initializing widget api");
@@ -97,10 +99,8 @@ runOnClient(async () => {
     widget = await WidgetApiImpl.create();
 
     await widget!.requestCapabilities([
-      "org.matrix.msc4039.upload_file",
-      "org.matrix.msc4039.download_file",
-      WidgetEventCapability.forRoomEvent(EventDirection.Send, EVENT_TYPE),
-      WidgetEventCapability.forRoomEvent(EventDirection.Receive, EVENT_TYPE)
+      WidgetEventCapability.forRoomEvent(EventDirection.Send, EVENT_TYPE_FILTER),
+      WidgetEventCapability.forRoomEvent(EventDirection.Receive, EVENT_TYPE_FILTER),
     ]);
 
     let content: RoomContent[] = [];
@@ -109,31 +109,29 @@ runOnClient(async () => {
 
     const subscription = widget
       .observeRoomEvents(EVENT_TYPE, {
+        messageType: MSG_TYPE == null ? undefined : MSG_TYPE
       })
       .subscribe(async (event) => {
-        console.log("Received room event");
-        console.log(event);
+
         // Callback is called every time a room event is received
 
-        if ((event.content as any)["url"] != null) {
-          var url = (event.content as any)["url"];
+        if ((event.content as any)["data"] != null) {
+          var b64 = (event.content as any)["data"];
 
-          var result = await widget?.downloadFile(url)!;
+          var data = base64ToUint8(b64);
 
-          if (!(result.file instanceof Blob)) {
-            throw new Error('Got non Blob file response');
-          }
+          // if (data.byteLength > 15000) {
+          //   console.log("Drawing too complex, skipping");
+          //   return;
+          // }
 
-          const downloadedFileDataUrl = URL.createObjectURL(result.file);
-          console.log(downloadedFileDataUrl);
+          console.log("Drawing data num bytes: ", data.byteLength)
+          var image = decodeToDataURL(data);
 
-
-
-
-
+          if (image == null) return;
 
           var ev: RoomContent = {
-            imageURL: downloadedFileDataUrl,
+            imageURL: image,
             serverTs: event['origin_server_ts'],
             id: event.event_id,
             animate: true,
@@ -248,7 +246,6 @@ const Room = () => {
 
     setTimeout(() => scrollContent(), 100)
 
-    console.log("Received matrix event");
   });
 
   useEffect(() => {
@@ -306,7 +303,7 @@ const Room = () => {
     container!.scroll({ top: container!.scrollHeight, behavior: 'smooth' })
   }
 
-  const receiveCanvasData = ({ dataUrl, width, height }: CanvasData) => {
+  const receiveCanvasData = ({ dataUrl, width, height, compressed }: CanvasData) => {
     let messagesWillTriggerScroll = true
 
     if (messagesContainerRef.current) {
@@ -340,29 +337,20 @@ const Room = () => {
     //   }
     // ])
 
-    console.log("Receive canvas data");
 
-    sendMessageToRoom(dataUrl, roomColor)
+
+    sendMessageToRoom(compressed, roomColor, width, height)
   }
 
-  const sendMessageToRoom = async (dataUrl: string, roomColor: string) => {
 
-    const arrayBuffer = await (await fetch(dataUrl)).arrayBuffer();
-    var result = await widget?.uploadFile(arrayBuffer)
 
+  const sendMessageToRoom = async (imageData: Uint8Array, roomColor: string, width: number, height: number) => {
     console.log("Sending message to room!");
 
-    if (result != null) {
-      widget?.sendRoomEvent(EVENT_TYPE, {
-        "body": "paperchat.png",
-        "info": {
-          "size": arrayBuffer.byteLength,
-          "mimetype": "image/png",
-        },
-        "msgtype": "m.image",
-        "url": result["content_uri"]
-      });
-    }
+    widget?.sendRoomEvent(EVENT_TYPE, {
+      "msgtype": "xyz.airyz.paperchat.msg",
+      "data": uint8ToBase64(imageData)
+    });
   }
 
   const getRoomContent = () => {

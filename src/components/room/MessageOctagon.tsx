@@ -123,7 +123,7 @@ const MessageOctagon = ({ img_uri, color, id, shouldAnimate, sender }: MessageOc
               </div>
             </div>
           </div>
-          <img src={img_uri} onLoad={handleLoad} ref={imgRef} alt="message" />
+          <img src={img_uri} onLoad={handleLoad} ref={imgRef} alt="message" style={{ imageRendering: "pixelated" }} />
         </div>
       </div>
     </div>

@@ -13,6 +13,7 @@ import {
   keepOnlyShadesOfGray,
   containsNonLatinChars
 } from '../helpers/helperFunctions'
+import { decodeToDataURL, encodeWithHeader } from '../helpers/imageCompression'
 
 const { canvas_outline, canvas_content, usernameRectangle } = styles
 
@@ -138,7 +139,7 @@ const Canvas = ({
       return getPercentage(76, divisionsHeight)
     }
 
-    return getPercentage(88, divisionsHeight)
+    return getPercentage(100, divisionsHeight)
   }
 
   const posOverflowsX = (pos: PositionObj) => pos.x >= getPercentage(98, canvasRef.current!.width)
@@ -171,6 +172,8 @@ const Canvas = ({
 
     const textMetrics = ctx.measureText(key)
     const nextKeyPos = { x: Math.round(keyPosition.x + textMetrics.width), y: keyPosition.y }
+
+
     const marginRight = 3 * (window.devicePixelRatio || 1)
     const nextKeyWillOverflowCanvas = posOverflowsX({
       x: nextKeyPos.x + marginRight,
@@ -289,6 +292,7 @@ const Canvas = ({
   const drawDivisions = () => {
     const divisionsCanvas = document.createElement('canvas')
     const divCtx = divisionsCanvas.getContext('2d')!
+    divCtx.imageSmoothingEnabled = false;
     divisionsCanvas.width = containerRef.current!.offsetWidth * (window.devicePixelRatio || 1)
     divisionsCanvas.height = containerRef.current!.offsetHeight * (window.devicePixelRatio || 1)
 
@@ -393,8 +397,7 @@ const Canvas = ({
 
       const trimmedUsername = trimTextToWidth(ctxToUse, username, nameContainerWidth - usernameX)
       ctxToUse.fillText(username, usernameX, firstLineY - 1.5)
-      console.log("Drawing username");
-      console.log(username);
+
       setKeyPos({ x: getStartingX(), y: firstLineY })
 
       firstLineYRef.current = firstLineY
@@ -552,6 +555,7 @@ const Canvas = ({
 
     const msgCanvas = document.createElement('canvas')
     const msgCtx = msgCanvas.getContext('2d')!
+    msgCtx.imageSmoothingEnabled = false;
     const minHeight = divisionsHeight
     msgCanvas.width = ctx.canvas.width
     msgCanvas.height = ctx.canvas.height
@@ -635,6 +639,7 @@ const Canvas = ({
       msgCtx.fillStyle = canvasBgColor
       msgCtx.fillRect(0, 0, msgCanvas.width, msgCanvas.height)
 
+      console.log("Drawing image: ", sourceY, destinationY)
       // Draw the actual canvas content
       msgCtx.drawImage(
         ctx.canvas,
@@ -650,10 +655,15 @@ const Canvas = ({
 
       // drawUsernameRectangle(msgCtx, false, false)
 
+      var customData = encodeWithHeader(msgCanvas);
+
+      var decoded = decodeToDataURL(customData)!;
+
       emitter.emit('canvasData', {
-        dataUrl: msgCanvas.toDataURL(),
+        dataUrl: decoded,
         height: msgCanvas.height,
-        width: msgCanvas.width
+        width: msgCanvas.width,
+        compressed: customData,
       })
 
       playSound('send-message', 0.5)
@@ -671,6 +681,7 @@ const Canvas = ({
     canvas.width = containerRef.current!.offsetWidth * dpr
     canvas.height = containerRef.current!.offsetHeight * dpr
     const ctx = canvas.getContext('2d')!
+    ctx.imageSmoothingEnabled = false;
 
     setCanvasCtx(ctx)
     setDivisionsHeight(Math.floor(canvas.height / 5))

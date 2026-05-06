@@ -19,7 +19,7 @@ type ContentIndicators = {
   }
 }
 
-type CanvasData = { dataUrl: string; height: number; width: number }
+type CanvasData = { dataUrl: string; height: number; width: number; compressed: Uint8Array }
 
 // Types used in Firebase Realtime DB
 type OnlineUser = {

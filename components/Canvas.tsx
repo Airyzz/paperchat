@@ -393,8 +393,7 @@ const Canvas = ({
 
       const trimmedUsername = trimTextToWidth(ctxToUse, username, nameContainerWidth - usernameX)
       ctxToUse.fillText(username, usernameX, firstLineY - 1.5)
-      console.log("Drawing username");
-      console.log(username);
+
       setKeyPos({ x: getStartingX(), y: firstLineY })
 
       firstLineYRef.current = firstLineY
